@@ -212,3 +212,6 @@ details[open] summary::after{content:"−"}details>div{padding:0 20px 18px;color
 .popup .btn{margin-top:10px;background:#fff;color:#052a47}
 .popup .px{position:absolute;right:14px;top:10px;width:44px;height:44px;border:2px solid #9fdcf7;border-radius:50%;background:transparent;color:#fff;font-size:28px;line-height:1;cursor:pointer}
 .popup .px:hover,.popup .px:focus-visible{background:#fff;color:#052a47}
+.nlist details summary{cursor:pointer}
+.flist{margin:.5rem 0 .3rem 1.1rem;padding:0;list-style:disc;font-size:.92rem}
+.flist li{display:list-item;margin:.2rem 0;border:0;padding:0;background:none;grid-template-columns:none}
