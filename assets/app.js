@@ -11,8 +11,32 @@ function ck(v){try{localStorage.setItem('ck',v)}catch(e){}$('#ck').style.display
 document.addEventListener('DOMContentLoaded',function(){
  renderGal();
  $$('#a11yp [data-k]').forEach(function(b){b.onclick=function(){A[b.dataset.k]=!A[b.dataset.k];sv();ap()}});
- var m=$('.menu');if(m)m.onclick=function(){var n=$('#n');var o=n.classList.toggle('open');m.setAttribute('aria-expanded',o)};
- document.addEventListener('keydown',function(e){if(e.key==='Escape'){var p=$('#a11yp');if(p&&p.classList.contains('open')){p.classList.remove('open');$('#a11yb').focus()}}});
+ var m=$('.menu'),nav=$('#n');
+ if(m)m.onclick=function(){var o=nav.classList.toggle('open');m.setAttribute('aria-expanded',o)};
+ function setSubmenu(item,open){item.classList.toggle('open',open);$('.nav-trigger',item).setAttribute('aria-expanded',open?'true':'false')}
+ function closeSubmenus(except){$$('#n .has-submenu.open').forEach(function(item){if(item!==except)setSubmenu(item,false)})}
+ $$('#n .has-submenu').forEach(function(item){
+  var trigger=$('.nav-trigger',item);
+  item.addEventListener('pointerenter',function(e){if(e.pointerType==='mouse'){closeSubmenus(item);setSubmenu(item,true)}});
+  item.addEventListener('pointerleave',function(e){if(e.pointerType==='mouse'&&!item.contains(document.activeElement))setSubmenu(item,false)});
+  item.addEventListener('pointerdown',function(e){item.dataset.pointerType=e.pointerType;item.dataset.openOnPointerDown=item.classList.contains('open')?'true':'false'});
+  item.addEventListener('focusin',function(){closeSubmenus(item);setSubmenu(item,true)});
+  item.addEventListener('focusout',function(e){if(!item.contains(e.relatedTarget))setSubmenu(item,false)});
+  trigger.addEventListener('click',function(e){
+   var open;
+   if(e.detail===0)open=!item.classList.contains('open');
+   else if((e.pointerType||item.dataset.pointerType)==='mouse')open=true;
+   else open=item.dataset.openOnPointerDown!=='true';
+   closeSubmenus(item);setSubmenu(item,open)
+  });
+ });
+ document.addEventListener('click',function(e){if(nav&&!nav.contains(e.target))closeSubmenus()});
+ document.addEventListener('keydown',function(e){if(e.key==='Escape'){
+  var open=$('#n .has-submenu.open');
+  if(open){setSubmenu(open,false);$('.nav-trigger',open).focus()}
+  else if(nav&&nav.classList.contains('open')){nav.classList.remove('open');if(m){m.setAttribute('aria-expanded','false');m.focus()}}
+  var p=$('#a11yp');if(p&&p.classList.contains('open')){p.classList.remove('open');$('#a11yb').focus()}
+ }});
  document.addEventListener('mousemove',function(e){if(A.ruler)$('#ruler').style.top=(e.clientY-23)+'px'});
  try{if(!localStorage.getItem('ck'))$('#ck').style.display='block'}catch(e){$('#ck').style.display='block'}
  ap();
